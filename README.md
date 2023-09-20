@@ -6,7 +6,7 @@
 > 1. In this role backups configurations for Cisco IOS devices and Cisco SMB switches - SG300, SG500, SG350, SG550, CBS350
 > 2. If you need another device types add relevant tasks into roles/network_devices_backup/tasks/main.yml
 > 3. Update your inventory file and group_vars for ansible connections
-> 4. Rewrite path to role and inventory file in roles/network_devices_backup/files/network-devices-backups.service if your ansible files structure is different
+> 4. Rewrite path to role, playbook and inventory file in roles/network_devices_backup/files/network-devices-backups.service and playbooks/network_devices_backup.yml if your ansible files structure is different
 
 ### 1 Create Ansible role for network devices backup
 
