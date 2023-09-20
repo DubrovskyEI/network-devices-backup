@@ -41,7 +41,7 @@
           filename: "{{ inventory_hostname }}.cfg"
           dir_path: "{{ backup_root }}"
 
-# Removing "ntp clock-period" line from configuration for idempotency
+# Removing "ntp clock-period" line from configuration file for idempotency
     - name: Remove NTP period line
       ansible.builtin.lineinfile:
         path: "{{ backup_root }}/{{ inventory_hostname }}.cfg"
