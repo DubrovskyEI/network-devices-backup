@@ -1,0 +1,6 @@
+---
+# vars file for network_devices_backup
+backup_root: /opt/network-devices-backups
+ansible_user: ansible
+ansible_password: '{{ lookup("env", "ANSIBLE_READONLY_PASSWORD") }}'
+git_branch: "main"

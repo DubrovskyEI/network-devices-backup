@@ -1,0 +1,84 @@
+---
+# tasks file for network_devices_backup
+- name: Get timestamp
+  ansible.builtin.command: date +%Y.%m.%d-%H:%M:%S
+  register: timestamp
+  run_once: true
+  delegate_to: localhost
+  changed_when: false
+
+- name: Ensure correct branch is selected
+  ansible.builtin.command: git switch {{ git_branch }}
+  args:
+    chdir: "{{ backup_root }}"
+  changed_when: false
+  delegate_to: localhost
+  run_once: true
+
+- name: Switch to target branch
+  ansible.builtin.command: git checkout {{ backup_root }}
+  args:
+    chdir: "{{ backup_root }}"
+  changed_when: false
+  delegate_to: localhost
+  run_once: true
+
+- name: Syncronize with remote branch
+  ansible.builtin.command: git pull origin {{ git_branch }}
+  args:
+    chdir: "{{ backup_root }}"
+  changed_when: false
+  delegate_to: localhost
+  run_once: true
+
+- name: Backup ios config
+  when: ansible_network_os == "ios"
+  block:
+    - name: Backup ios config
+      cisco.ios.ios_config:
+        backup: true
+        backup_options:
+          filename: "{{ inventory_hostname }}.cfg"
+          dir_path: "{{ backup_root }}"
+
+# Removing "ntp clock-period" line from configuration for idempotency
+    - name: Remove NTP period line
+      ansible.builtin.lineinfile:
+        path: "{{ backup_root }}/{{ inventory_hostname }}.cfg"
+        regexp: 'ntp clock-period*'
+        state: absent
+      delegate_to: localhost
+
+- name: Backup cisco SMB config
+  when: ansible_network_os == "community.ciscosmb.ciscosmb"
+  block:
+    - name: Gather cisco SMB config
+      community.ciscosmb.facts:
+        gather_subset:
+          - config
+
+    - name: Write cisco SMB config to file
+      local_action:
+        module: copy
+        content: "{{ ansible_net_config }}"
+        dest: "{{ backup_root }}/{{ inventory_hostname }}.cfg"
+
+- name: Check the directory status
+  ansible.builtin.command: git status
+  args:
+    chdir: "{{ backup_root }}"
+  register: changes
+  changed_when: false
+  delegate_to: localhost
+  run_once: true
+
+- name: Add files to Git staging area, commit and push
+  ansible.builtin.shell: |
+    git add .
+    git commit -m "Backup by Ansible at {{ timestamp.stdout }}"
+    git push origin
+  args:
+    chdir: "{{ backup_root }}"
+  delegate_to: localhost
+  changed_when: false
+  run_once: true

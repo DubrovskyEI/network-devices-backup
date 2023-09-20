@@ -1,0 +1,8 @@
+---
+- hosts:
+    - cisco_all 
+  name: Import network_devices_backup role playbook
+  tasks:
+    - name: Import network_devices_backup role
+      ansible.builtin.import_role:
+        name: network_devices_backup

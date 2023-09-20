@@ -1,0 +1,11 @@
+[Unit]
+Description=Schedule a network-devices-backups
+
+[Timer]
+Persistent=true
+OnCalendar=hourly
+Unit=network-devices-backups.service
+
+[Install]
+WantedBy=timers.target
+

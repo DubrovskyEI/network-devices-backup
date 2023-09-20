@@ -1,0 +1,12 @@
+[Unit]
+Description=Ansible runner for network devices backup playbook
+After=network.target
+
+[Service]
+WorkingDirectory=/etc/ansible/
+EnvironmentFile=/etc/environment
+ExecStart=/etc/ansible/bin/ansible-playbook playbooks/network_devices_backup.yml -i inventories/switches.ini
+User=ansible
+
+[Install]
+WantedBy=multi-user.target
