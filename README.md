@@ -2,6 +2,12 @@
 
 **Automate backups of network devices configurations using Ansible and Git VCS**
 
+> Info
+> 1. In this role backups configurations for Cisco IOS devices and Cisco SMB switches - SG300, SG500, SG350, SG550, CBS350
+> 2. If you need another device types add relevant tasks into roles/network_devices_backup/tasks/main.yml
+> 3. Update your inventory file and group_vars for ansible connections
+> 4. Rewrite path to role and inventory file in roles/network_devices_backup/files/network-devices-backups.service if your ansible files structure is different
+
 ### 1 Create Ansible role for network devices backup
 
 #### 1.1 Cloning this repo
@@ -83,7 +89,7 @@ sudo systemctl enable network-devices-backups.timer
 
 ##### References
 
-> [!abstract]+ References
+> References
 > 1. https://www.packetswitch.co.uk/ncm-ansible-git/
 > 2. https://medium.com/@razansaad2/backup-cisco-configuration-by-ansible-709491ba0a53
 > 3. https://www.zen-networks.ma/single-post/automation-of-network-equipment-backups-via-gitlab-ansible
